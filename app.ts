@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import helmet from "helmet";
 import cookieParser from 'cookie-parser';
+import { authRoutes } from "./routes/auth";
 
 const app = express();
 /*---> Middlewares <---*/
@@ -13,6 +14,8 @@ app.use(morgan('dev'));
 app.use(helmet());
 app.use(cookieParser());
 
+/*---> Mounting the authentication routes on the "/auth" path <---*/
+app.use("/auth", authRoutes);
 
 app.use((error: Error, req: Request, res: Response) => {
     console.error(error.stack); // Display the error in the console
