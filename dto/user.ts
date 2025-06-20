@@ -6,7 +6,7 @@ export interface AuthTypes {
 }
 
 export interface UserTypes {
-    _id?: string;
+    id?: string;
     name: string;
     phone: string;
     password: string;

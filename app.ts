@@ -4,7 +4,10 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import helmet from "helmet";
 import cookieParser from 'cookie-parser';
+
+import "./dto/data"; // Importing the global types for Express Request
 import { authRoutes } from "./routes/auth";
+import { convRoutes } from "./routes/conversation";
 
 const app = express();
 /*---> Middlewares <---*/
@@ -16,6 +19,9 @@ app.use(cookieParser());
 
 /*---> Mounting the authentication routes on the "/auth" path <---*/
 app.use("/auth", authRoutes);
+
+/*---> Mounting the routes on the "/api" path <---*/
+app.use("/api", convRoutes);
 
 app.use((error: Error, req: Request, res: Response) => {
     console.error(error.stack); // Display the error in the console

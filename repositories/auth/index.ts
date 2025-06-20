@@ -75,7 +75,7 @@ export const SignInRepository = async (userData: { phone: string; password: stri
         }
 
         const token = jwt.sign(
-            { id: user._id, phone: user.phone },
+            { id: user.id, phone: user.phone },
             process.env.JWT_SECRET,
             { expiresIn: '12h' }
         );
@@ -85,7 +85,7 @@ export const SignInRepository = async (userData: { phone: string; password: stri
                 token: token,
                 message: "Login successful!",
                 data: {
-                    id: user._id,
+                    id: user.id,
                     name: user.name,
                     phone: user.phone,
                 }
