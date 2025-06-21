@@ -25,7 +25,7 @@ export const addConversationController: functionControllers = async (req, res, n
 
         if (!currentUserId) {
             return res.status(401).json({ message: "Unauthorized" });
-        } else if (!members || !Array.isArray(members) || members.length < 2) {
+        } else if (!Array.isArray(members) || members.length < 2) {
             return res.status(400).json({ message: "At least 2 members are required to create a conversation." });
         } else if (isGroup && (!name || name.trim() === "")) {
             return res.status(400).json({ message: "Group name is required for group conversations." });

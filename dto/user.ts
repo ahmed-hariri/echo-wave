@@ -1,8 +1,10 @@
-
-export interface AuthTypes {
-    name: string;
+export interface LoginTypes {
     phone: string;
     password: string;
+}
+
+export interface RegisterTypes extends LoginTypes {
+    name: string;
 }
 
 export interface UserTypes {
