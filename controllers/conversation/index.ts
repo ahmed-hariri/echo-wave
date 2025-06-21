@@ -1,3 +1,4 @@
+import { error } from "console";
 import { functionControllers } from "../../dto/controllers";
 import { addConversationRepository, getAllConversationsRepository, removeConversationRepository } from "../../repositories/conversation";
 
@@ -7,11 +8,11 @@ export const getAllConversationsController: functionControllers = async (req, re
         return res.status(400).type("json").json({ message: "You don't have userId!" })
     }
     try {
-        const { data, message } = await getAllConversationsRepository({ id: userId });
+        const { data, message, error } = await getAllConversationsRepository({ id: userId });
         if (data) {
-            return res.status(200).type("json").json({ data, message });
+            return res.status(200).type("json").json({ message, data });
         }
-        return res.status(400).type("json").json({ message });
+        return res.status(400).type("json").json({ message, error });
     } catch (error) {
         next(error)
     }
@@ -30,12 +31,11 @@ export const addConversationController: functionControllers = async (req, res, n
             return res.status(400).json({ message: "Group name is required for group conversations." });
         }
 
-        const { data, message } = await addConversationRepository({ members, isGroup, name, lastMessage });
-
+        const { data, message, error } = await addConversationRepository({ members, isGroup, name, lastMessage });
         if (data) {
-            return res.status(201).json({ message, data });
+            return res.status(200).type("json").json({ message, data });
         }
-        return res.status(500).json({ message });
+        return res.status(500).json({ message, error });
     } catch (error) {
         next(error);
     }
@@ -51,11 +51,10 @@ export const removeConversationController: functionControllers = async (req, res
         }
 
         const { data, message } = await removeConversationRepository(conversationId, userId);
-
         if (data) {
-            return res.status(403).json({ message });
+            return res.status(200).type("json").json({ message, data });
         }
-        return res.status(200).json({ message });
+        return res.status(200).json({ message, error });
     } catch (error) {
         next(error);
     }
