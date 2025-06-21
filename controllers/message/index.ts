@@ -23,9 +23,7 @@ export const updateMessageController: functionControllers = async (req, res, nex
         const userId = req.data.id;
         const { text } = req.body;
 
-        if (!text) {
-            return res.status(400).json({ message: "Message text is required." });
-        } else if (!userId) {
+        if (!userId) {
             return res.status(400).type("json").json({ message: "You don't have userId!" })
         } else if (!messageId) {
             return res.status(400).type("json").json({ message: "You don't have messageId!" })
