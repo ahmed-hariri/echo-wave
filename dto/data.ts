@@ -9,3 +9,10 @@ declare global {
         }
     }
 }
+
+// Extend the Socket interface to include userId
+declare module "socket.io" {
+    interface Socket {
+        userId?: string;
+    }
+}

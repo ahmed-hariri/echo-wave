@@ -3,38 +3,55 @@ import mongoose, { Error } from "mongoose";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import helmet from "helmet";
-import cookieParser from 'cookie-parser';
+import cookieParser from "cookie-parser";
+import http from "http";
+import { Server } from "socket.io";
 
-import "./dto/data"; // Importing the global types for Express Request
+import "./dto/data"; // Global type definitions for Express Request extensions
 import { authRoutes } from "./routes/auth";
 import { convRoutes } from "./routes/conversation";
 import { messageRoutes } from "./routes/message";
+import { socketHandler } from "./sockets";
+
+dotenv.config();
 
 const app = express();
-/*---> Middlewares <---*/
-dotenv.config();
+const server = http.createServer(app); // Create an HTTP server for socket.io integration
+const io = new Server(server, {
+    cors: {
+        origin: "*", // Change to your frontend URL
+        credentials: true,
+    },
+});
+
+// Middleware setup
 app.use(express.json());
-app.use(morgan('dev'));
+app.use(morgan("dev"));
 app.use(helmet());
 app.use(cookieParser());
 
-/*---> Mounting the authentication routes on the "/auth" path <---*/
+// Route mounting
 app.use("/auth", authRoutes);
-
-/*---> Mounting the routes on the "/api" path <---*/
 app.use("/api", convRoutes);
 app.use("/api", messageRoutes);
 
+// Global error handler
 app.use((error: Error, req: Request, res: Response) => {
-    console.error(error.stack); // Display the error in the console
+    console.error(error.stack);
     res.status(500).json({
-        message: 'An error occurred on the server!',
-        error: error.message
-    })
+        message: "An error occurred on the server!",
+        error: error.message,
+    });
 });
 
-mongoose.connect(process.env.MONGO_URL ?? '')
+// Initialize socket events
+socketHandler(io);
+
+// MongoDB connection and server startup
+mongoose
+    .connect(process.env.MONGO_URL ?? "")
     .then(() => {
-        const port = process.env.PORT
-        app.listen(port, () => console.log("hello world!"))
-    }).catch((error) => console.error("Error connecting to the database:", error))
+        const port = process.env.PORT || 5000;
+        server.listen(port, () => console.log(`🚀 Server is running on port ${port}`));
+    })
+    .catch((error) => console.error("❌ Error connecting to the database:", error));
