@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import UserModel from '../../models/user';
-import { AuthTypes, UserTypes } from '../../dto/user';
+import { RegisterTypes, UserTypes } from '../../dto/user';
 
 /*---> Function to handle user registration (SignUp) <---*/
-export const SignUpRepository = async (userData: AuthTypes) => {
+export const SignUpRepository = async (userData: RegisterTypes) => {
     const { name, phone, password } = userData;
 
     try {
