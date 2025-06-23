@@ -12,6 +12,7 @@ import { authRoutes } from "./routes/auth";
 import { convRoutes } from "./routes/conversation";
 import { messageRoutes } from "./routes/message";
 import { socketHandler } from "./sockets";
+import { contactsRoutes } from "./routes/contacts";
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ app.use(cookieParser());
 app.use("/auth", authRoutes);
 app.use("/api", convRoutes);
 app.use("/api", messageRoutes);
+app.use("/api", contactsRoutes);
 
 // Global error handler
 app.use((error: Error, req: Request, res: Response) => {

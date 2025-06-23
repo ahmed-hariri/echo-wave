@@ -8,7 +8,7 @@ const userSchema = new Schema({
     profilePic: { type: String, default: "" },
     isOnline: { type: Boolean, required: true, default: false },
     lastSeen: { type: Date, required: true, default: Date.now },
-    contacts: { type: [{ type: Schema.Types.ObjectId, ref: "User" }] },
+    contacts: { type: [String], default: [] }
 }, { timestamps: true });
 
 const UserModel = mongoose.model("User", userSchema);
