@@ -1,3 +1,5 @@
+import { ObjectId } from "mongoose";
+
 export interface LoginTypes {
     phone: string;
     password: string;
@@ -8,7 +10,7 @@ export interface RegisterTypes extends LoginTypes {
 }
 
 export interface UserTypes {
-    id?: string;
+    id?: ObjectId;
     name: string;
     phone: string;
     password: string;

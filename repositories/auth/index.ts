@@ -1,7 +1,7 @@
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
 import UserModel from '../../models/user';
 import { RegisterTypes, UserTypes } from '../../dto/user';
+import { comparePassword, hashedPassword } from '../../utils/hash';
+import { generateToken } from '../../utils/jwt';
 
 /*---> Function to handle user registration (SignUp) <---*/
 export const SignUpRepository = async (userData: RegisterTypes) => {
@@ -13,12 +13,11 @@ export const SignUpRepository = async (userData: RegisterTypes) => {
             return { token: null, message: "Phone number is already in use." };
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-
+        const hashed = await hashedPassword(password);
         const newUser = new UserModel({
             name: name,
             phone: phone,
-            password: hashedPassword,
+            password: hashed,
             profilePic: "",
             bio: "",
             isOnline: false,
@@ -31,11 +30,7 @@ export const SignUpRepository = async (userData: RegisterTypes) => {
             throw new Error("JWT_SECRET is not defined.");
         }
 
-        const token = jwt.sign(
-            { id: newUser._id, phone: newUser.phone },
-            process.env.JWT_SECRET,
-            { expiresIn: '12h' }
-        );
+        const token = generateToken({ id: newUser._id, phone: newUser.phone });
         if (token) {
             return {
                 token: token,
@@ -65,7 +60,7 @@ export const SignInRepository = async (userData: { phone: string; password: stri
             return { token: null, message: "No account found with this phone number." };
         }
 
-        const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = await comparePassword(password, user.password);
         if (!isMatch) {
             return { token: null, message: "Incorrect password." };
         }
@@ -74,12 +69,7 @@ export const SignInRepository = async (userData: { phone: string; password: stri
             throw new Error("JWT_SECRET is not defined.");
         }
 
-        const token = jwt.sign(
-            { id: user.id, phone: user.phone },
-            process.env.JWT_SECRET,
-            { expiresIn: '12h' }
-        );
-
+        const token = generateToken({ id: user.id, phone: user.phone });
         if (token) {
             return {
                 token: token,
