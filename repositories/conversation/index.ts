@@ -21,7 +21,18 @@ export const getAllConversationsRepository = async (idMember: Partial<UserTypes>
             })
             .sort({ updatedAt: -1 });
         if (conversations?.length > 0) {
-            return { data: conversations, message: "All conversations fetched successfully." };
+            // Transformer les conversations
+            const formatted = conversations.map(conv => {
+                const otherUser = conv.members.find((m: any) => m._id.toString() !== id?.toString());
+                return {
+                    _id: conv._id,
+                    user: otherUser,
+                    lastMessage: conv.lastMessage,
+                    updatedAt: conv.updatedAt
+                };
+            });
+
+            return { data: formatted, message: "All conversations fetched successfully." };
         }
         return { data: [], message: 'Not found any conversations' }
     } catch (error) {

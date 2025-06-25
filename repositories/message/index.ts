@@ -1,14 +1,21 @@
+import mongoose from "mongoose";
+import ConversationModel from "../../models/conversation";
 import MessageModel from "../../models/message"
 
 export const getAllMessagesRepository = async (conversationId: string) => {
     try {
+        const conversation = await ConversationModel.findById(conversationId);
+        if (!conversation) {
+            return { success: false, message: "Conversation not found." };
+        }
+
         const messages = await MessageModel.find({ conversation: conversationId })
             .populate({
                 path: "sender",
                 select: "name profilePic"
             })
             .sort({ createdAt: 1 });
-            
+
         if (messages.length > 0) {
             return { data: messages, message: "All Messages fetched successfully." };
         }
@@ -17,6 +24,33 @@ export const getAllMessagesRepository = async (conversationId: string) => {
     } catch (error) {
         console.error("Error fetching messages :", error);
         return { message: "Error fetching messages :", error };
+    }
+}
+
+export const addMessageRepository = async (conversationId: string, senderId: string, text: string) => {
+    try {
+        const conversation = await ConversationModel.findById(conversationId);
+        if (!conversation) {
+            return { success: false, message: "Conversation not found." };
+        }
+
+        // Convert userId to ObjectId for comparison
+        const userObjectId = new mongoose.Types.ObjectId(senderId);
+        if (!conversation.members.includes(userObjectId)) {
+            return { message: "You are not authorized to delete this conversation." };
+        }
+
+        const newMessage = new MessageModel({ conversation: conversationId, sender: senderId, text: text });
+        const savedMessage = await newMessage.save();
+
+        // Update lastMessage in conversation
+        conversation.lastMessage = savedMessage._id;
+        await conversation.save();
+
+        return { data: savedMessage, message: "Message sent successfully." };
+    } catch (error) {
+        console.error("Error sending message:", error);
+        return { message: "Error sending message", error };
     }
 }
 
@@ -42,7 +76,6 @@ export const updateMessageRepository = async (messageId: string, newText: string
 export const deleteMessageRepository = async (messageId: string, userId: string) => {
     try {
         const message = await MessageModel.findById(messageId);
-
         if (!message) {
             return { success: false, message: "Message not found" };
         } else if (message.sender.toString() !== userId) {
