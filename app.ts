@@ -12,7 +12,7 @@ import { authRoutes } from "./routes/auth";
 import { convRoutes } from "./routes/conversation";
 import { messageRoutes } from "./routes/message";
 import { socketHandler } from "./sockets";
-import { contactsRoutes } from "./routes/contacts";
+import { contactsRoutes } from "./routes/user/contacts";
 
 dotenv.config();
 
