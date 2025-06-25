@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { authenticateToken } from "../../middlewares/authToken";
-import { validateBody } from "../../middlewares/validateBody";
-import { addContactController, deleteContactController, getAllContactsController } from "../../controllers/contacts";
+import { authenticateToken } from "../../../middlewares/authToken";
+import { validateBody } from "../../../middlewares/validateBody";
+import { addContactController, deleteContactController, getAllContactsController } from "../../../controllers/user/contacts";
 
 /*---> Define contacts routes <---*/
 export const contactsRoutes: Router = Router();

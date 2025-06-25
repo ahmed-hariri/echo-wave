@@ -1,6 +1,6 @@
-import { addContactRepository, deleteContactRepository } from './../../repositories/contacts/index';
-import { functionControllers } from "../../dto/controllers";
-import { getAllContactsRepository } from "../../repositories/contacts";
+import { addContactRepository, deleteContactRepository } from '../../../repositories/user/contacts/index';
+import { functionControllers } from "../../../dto/controllers";
+import { getAllContactsRepository } from '../../../repositories/user/contacts';
 
 export const getAllContactsController: functionControllers = async (req, res, next) => {
     try {
@@ -10,9 +10,9 @@ export const getAllContactsController: functionControllers = async (req, res, ne
         }
         const { message, data, error } = await getAllContactsRepository(userId);
         if (data) {
-            return res.status(500).json({ message, data });
+            return res.status(200).json({ message, data });
         }
-        return res.status(200).json({ message, error });
+        return res.status(500).json({ message, error });
     } catch (error) {
         next(error);
     }
