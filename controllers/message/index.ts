@@ -1,5 +1,5 @@
 import { functionControllers } from "../../dto/controllers";
-import { deleteMessageRepository, getAllMessagesRepository, updateMessageRepository } from "../../repositories/message";
+import { addMessageRepository, deleteMessageRepository, getAllMessagesRepository, updateMessageRepository } from "../../repositories/message";
 
 export const getAllMessagesController: functionControllers = async (req, res, next) => {
     try {
@@ -9,9 +9,30 @@ export const getAllMessagesController: functionControllers = async (req, res, ne
         }
         const { message, data, error } = await getAllMessagesRepository(conversationId);
         if (data) {
-            return res.status(500).json({ message, data });
+            return res.status(200).json({ message, data });
         }
-        return res.status(200).json({ message, error });
+        return res.status(500).json({ message, error });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const addMessageController: functionControllers = async (req, res, next) => {
+    const { conversationId, text} = req.body;
+    const senderId = req.data?.id;
+
+    if (!conversationId || !text || !senderId) {
+        return res.status(400).json({
+            message: `Missing required fields: ${!conversationId ? 'conversationId' : ''} ${!text ? 'text' : ''}`
+        });
+    }
+
+    try {
+        const { data, message } = await addMessageRepository(conversationId, senderId, text);
+        if (data) {
+            return res.status(201).json({ data: data, message: message });
+        }
+        return res.status(400).json({ message: message || "Failed to send message" });
     } catch (error) {
         next(error);
     }
