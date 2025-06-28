@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
+/* ---> Mongoose schema and model for messages <--- */
 const messageSchema = new Schema({
     conversation: { type: Schema.Types.ObjectId, ref: "Conversation", required: true },
     sender: { type: Schema.Types.ObjectId, ref: "User", required: true },

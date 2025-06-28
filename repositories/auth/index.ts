@@ -3,7 +3,7 @@ import { RegisterTypes, UserTypes } from '../../dto/user';
 import { comparePassword, hashedPassword } from '../../utils/hash';
 import { generateToken } from '../../utils/jwt';
 
-/*---> Function to handle user registration (SignUp) <---*/
+/* ---> Handle user registration (SignUp) repository function <--- */
 export const SignUpRepository = async (userData: RegisterTypes) => {
     const { name, phone, password } = userData;
 
@@ -15,8 +15,8 @@ export const SignUpRepository = async (userData: RegisterTypes) => {
 
         const hashed = await hashedPassword(password);
         const newUser = new UserModel({
-            name: name,
-            phone: phone,
+            name,
+            phone,
             password: hashed,
             profilePic: "",
             bio: "",
@@ -33,14 +33,14 @@ export const SignUpRepository = async (userData: RegisterTypes) => {
         const token = generateToken({ id: newUser._id, phone: newUser.phone });
         if (token) {
             return {
-                token: token,
+                token,
                 message: "Account has been created!",
                 data: {
                     id: newUser._id,
                     name: newUser.name,
                     phone: newUser.phone,
                 }
-            }
+            };
         }
         return { token: null, message: "Failed to generate token" };
     } catch (error) {
@@ -49,8 +49,7 @@ export const SignUpRepository = async (userData: RegisterTypes) => {
     }
 };
 
-
-/*---> Function to handle user login (SignIn) <---*/
+/* ---> Handle user login (SignIn) repository function <--- */
 export const SignInRepository = async (userData: { phone: string; password: string }) => {
     const { phone, password } = userData;
 
@@ -72,14 +71,14 @@ export const SignInRepository = async (userData: { phone: string; password: stri
         const token = generateToken({ id: user.id, phone: user.phone });
         if (token) {
             return {
-                token: token,
+                token,
                 message: "Login successful!",
                 data: {
                     id: user.id,
                     name: user.name,
                     phone: user.phone,
                 }
-            }
+            };
         }
         return { token: null, message: "Failed to generate token" };
     } catch (error) {

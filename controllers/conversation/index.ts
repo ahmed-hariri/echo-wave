@@ -2,6 +2,7 @@ import { error } from "console";
 import { functionControllers } from "../../dto/controllers";
 import { addConversationRepository, getAllConversationsRepository, removeConversationRepository } from "../../repositories/conversation";
 
+/* ---> Get all conversations for a user Controller <--- */
 export const getAllConversationsController: functionControllers = async (req, res, next) => {
     const userId = req.data.id;
     if (!userId) {
@@ -18,6 +19,7 @@ export const getAllConversationsController: functionControllers = async (req, re
     }
 }
 
+/* ---> Add a new conversation Controller <--- */
 export const addConversationController: functionControllers = async (req, res, next) => {
     try {
         const currentUserId = req?.data?.id;
@@ -41,6 +43,7 @@ export const addConversationController: functionControllers = async (req, res, n
     }
 };
 
+/* ---> Remove a conversation Controller <--- */
 export const removeConversationController: functionControllers = async (req, res, next) => {
     try {
         const conversationId = req.params.id;

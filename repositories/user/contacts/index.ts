@@ -1,5 +1,6 @@
 import UserModel from "../../../models/user";
 
+/* ---> Get all contacts of a user repository function <--- */
 export const getAllContactsRepository = async (userId: string) => {
     try {
         const user = await UserModel.findById(userId).populate({ path: "contacts", select: "name phone profilePic" });
@@ -7,14 +8,15 @@ export const getAllContactsRepository = async (userId: string) => {
         if (user?.contacts && user.contacts.length > 0) {
             return { data: user.contacts, message: "All contacts fetched successfully." };
         }
-        return { data: [], message: 'Not found any contacts' }
+        return { data: [], message: 'Not found any contacts' };
 
     } catch (error) {
         console.error("Error fetching contacts:", error);
         return { message: "Error fetching contacts:", error };
     }
-}
+};
 
+/* ---> Add a contact to user contacts repository function <--- */
 export const addContactRepository = async (userId: string, contactPhone: string) => {
     try {
         const contactUser = await UserModel.findOne({ phone: contactPhone });
@@ -39,8 +41,9 @@ export const addContactRepository = async (userId: string, contactPhone: string)
         console.error("Error adding contact by phone:", error);
         return { message: "Error adding contact.", error };
     }
-}
+};
 
+/* ---> Remove a contact from user contacts repository function <--- */
 export const deleteContactRepository = async (userId: string, contactPhone: string) => {
     try {
         const contactUser = await UserModel.findOne({ phone: contactPhone });
@@ -66,4 +69,4 @@ export const deleteContactRepository = async (userId: string, contactPhone: stri
         console.error("Error removing contact by phone:", error);
         return { message: "Error removing contact.", error };
     }
-}
+};

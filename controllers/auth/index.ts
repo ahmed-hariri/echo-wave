@@ -2,7 +2,7 @@ import { LoginTypes, RegisterTypes } from "../../dto/user";
 import { functionControllers } from "../../dto/controllers";
 import { SignInRepository, SignUpRepository } from "../../repositories/auth";
 
-/*---> Register User Controller <---*/
+/* ---> Register a new user Controller <--- */
 export const registerUserController: functionControllers = async (req, res, next) => {
     const { name, phone, password } = req.body as RegisterTypes;
 
@@ -18,7 +18,7 @@ export const registerUserController: functionControllers = async (req, res, next
     }
 };
 
-/*---> Login User Controller <---*/
+/* ---> Login user Controller <--- */
 export const loginUserController: functionControllers = async (req, res, next) => {
     const { phone, password } = req.body as LoginTypes;
 

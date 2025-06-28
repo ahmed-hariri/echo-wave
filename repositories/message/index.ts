@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 import ConversationModel from "../../models/conversation";
-import MessageModel from "../../models/message"
+import MessageModel from "../../models/message";
 
+/* ---> Get all messages of a conversation repository function <--- */
 export const getAllMessagesRepository = async (conversationId: string) => {
     try {
         const conversation = await ConversationModel.findById(conversationId);
@@ -25,8 +26,9 @@ export const getAllMessagesRepository = async (conversationId: string) => {
         console.error("Error fetching messages :", error);
         return { message: "Error fetching messages :", error };
     }
-}
+};
 
+/* ---> Add a new message to a conversation repository function <--- */
 export const addMessageRepository = async (conversationId: string, senderId: string, text: string) => {
     try {
         const conversation = await ConversationModel.findById(conversationId);
@@ -34,13 +36,13 @@ export const addMessageRepository = async (conversationId: string, senderId: str
             return { success: false, message: "Conversation not found." };
         }
 
-        // Convert userId to ObjectId for comparison
+        // Convert senderId to ObjectId for membership check
         const userObjectId = new mongoose.Types.ObjectId(senderId);
         if (!conversation.members.includes(userObjectId)) {
-            return { message: "You are not authorized to delete this conversation." };
+            return { message: "You are not authorized to add messages to this conversation." };
         }
 
-        const newMessage = new MessageModel({ conversation: conversationId, sender: senderId, text: text });
+        const newMessage = new MessageModel({ conversation: conversationId, sender: senderId, text });
         const savedMessage = await newMessage.save();
 
         // Update lastMessage in conversation
@@ -52,8 +54,9 @@ export const addMessageRepository = async (conversationId: string, senderId: str
         console.error("Error sending message:", error);
         return { message: "Error sending message", error };
     }
-}
+};
 
+/* ---> Update a message text repository function <--- */
 export const updateMessageRepository = async (messageId: string, newText: string, userId: string) => {
     try {
         const message = await MessageModel.findById(messageId);
@@ -71,8 +74,9 @@ export const updateMessageRepository = async (messageId: string, newText: string
         console.error("Error updating message :", error);
         return { message: "Error updating message :", error };
     }
-}
+};
 
+/* ---> Delete a message repository function <--- */
 export const deleteMessageRepository = async (messageId: string, userId: string) => {
     try {
         const message = await MessageModel.findById(messageId);
