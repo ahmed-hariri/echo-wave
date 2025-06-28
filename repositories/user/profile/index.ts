@@ -1,6 +1,7 @@
 import { UserTypes } from "../../../dto/user";
 import UserModel from "../../../models/user";
 
+/* ---> Get user information repository function <--- */
 export const getUserInfoRepository = async (userId: string) => {
     try {
         const user = await UserModel.findById(userId).select("name phone bio profilePic isOnline lastSeen");
@@ -15,6 +16,7 @@ export const getUserInfoRepository = async (userId: string) => {
     }
 };
 
+/* ---> Update user information repository function <--- */
 export const updateUserInfoRepository = async (userId: string, information: Partial<UserTypes>) => {
     const { name, bio, profilePic, phone } = information;
 

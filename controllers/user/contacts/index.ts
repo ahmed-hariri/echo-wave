@@ -2,6 +2,7 @@ import { addContactRepository, deleteContactRepository } from '../../../reposito
 import { functionControllers } from "../../../dto/controllers";
 import { getAllContactsRepository } from '../../../repositories/user/contacts';
 
+/* ---> Get all contacts of the current user Controller <--- */
 export const getAllContactsController: functionControllers = async (req, res, next) => {
     try {
         const userId = req.data.id;
@@ -18,6 +19,7 @@ export const getAllContactsController: functionControllers = async (req, res, ne
     }
 };
 
+/* ---> Add a new contact Controller <--- */
 export const addContactController: functionControllers = async (req, res, next) => {
     try {
         const userId = req.data.id;
@@ -39,15 +41,16 @@ export const addContactController: functionControllers = async (req, res, next) 
     }
 };
 
+/* ---> Delete a contact Controller <--- */
 export const deleteContactController: functionControllers = async (req, res, next) => {
     try {
         const contactId = req.params.id;
         const userId = req.data.id;
 
         if (!userId) {
-            return res.status(400).type("json").json({ message: "You don't have userId!" })
+            return res.status(400).json({ message: "You don't have userId!" });
         } else if (!contactId) {
-            return res.status(400).type("json").json({ message: "You don't have contactId!" })
+            return res.status(400).json({ message: "You don't have contactId!" });
         }
 
         const { message, error } = await deleteContactRepository(contactId, userId);

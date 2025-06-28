@@ -1,6 +1,7 @@
 import { functionControllers } from "../../../dto/controllers";
 import { getUserInfoRepository, updateUserInfoRepository } from "../../../repositories/user/profile";
 
+/* ---> Get current user info Controller <--- */
 export const getUserInfoController: functionControllers = async (req, res, next) => {
     const userId = req.data?.id;
 
@@ -11,14 +12,15 @@ export const getUserInfoController: functionControllers = async (req, res, next)
     try {
         const { data, message, error } = await getUserInfoRepository(userId);
         if (data) {
-            return res.status(200).json({ data: data, message: message });
+            return res.status(200).json({ data, message });
         }
-        return res.status(500).json({ message: message });
+        return res.status(500).json({ message, error });
     } catch (error) {
         next(error);
     }
 };
 
+/* ---> Update current user info Controller <--- */
 export const updateUserInfoController: functionControllers = async (req, res, next) => {
     const userId = req.data?.id;
     const { bio, profilePic } = req.body;

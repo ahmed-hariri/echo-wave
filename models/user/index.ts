@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
+/* ---> Mongoose schema and model for users <--- */
 const userSchema = new Schema({
     name: { type: String, required: true },
     bio: { type: String, default: "" },
