@@ -6,6 +6,8 @@ import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import http from "http";
 import { Server } from "socket.io";
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
 
 import "./dto/data"; // Global type definitions for Express Request extensions
 import { authRoutes } from "./routes/auth";
@@ -30,6 +32,25 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(cookieParser());
+
+// Swagger configuration settings
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.0', // Specify the OpenAPI version
+        info: {
+            title: 'ChatApp documentation', // Title of your API documentation
+            version: '1.0.0',        // Version of your API
+            description: 'My API documentation', // Description shown in Swagger UI
+        },
+    },
+    apis: ['./routes/**/*.ts'] // Path to the API route files where Swagger comments are written
+};
+
+// Generate the Swagger specification based on the options above
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
+// Serve the Swagger UI at the /api-docs endpoint
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Route mounting
 app.use("/auth", authRoutes);
