@@ -1,4 +1,4 @@
-# EchoWave API
+# EchoWave
 
 ## Description
 This project is an API built with Express.js and MongoDB for building a chat application.  
